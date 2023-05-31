@@ -30,7 +30,7 @@ router.post("/apply-doctor",authMiddleware, applyDoctorController);
 
 // AUTH || POST
 router.post('/getUserData',authMiddleware,authController);
-module.exports = router;
+// module.exports = router;
 
 // Get Notifications || POST
 router.post('/get-all-notification',authMiddleware,getAllNotificationController);

@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const colors = require("colors");
-const moragan = require("morgan");
+const morgan = require("morgan");
 
 const connectDB = require("./config/db");
 const path = require('path');
@@ -17,7 +17,7 @@ const app = express();
 
 //middlewares
 app.use(express.json());
-app.use(moragan("dev"));
+app.use(morgan("dev"));
 
 //routes
 app.use("/api/v1/users", require("./routes/userRoutes"));

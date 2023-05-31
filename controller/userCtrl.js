@@ -20,7 +20,7 @@ const registerController = async (req, res) => {
     req.body.password = hashedPassword;
     const newUser = new userModel(req.body);
     await newUser.save();
-    res.status(201).send({ message: "Register Sucessfully", success: true });
+    res.status(201).send({ message: "Registered Sucessfully", success: true });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -202,10 +202,10 @@ const getAllDoctorsController = async (req, res) => {
 const bookingAvailabilityController = async (req, res) => {
   try {
     const date = moment(req.body.date).format("DD-MM-YYYY").toString();
-    const fromTime = moment(req.body.fromTime).subtract(0.5, "hours").format("HH:mm").toString();
+    const fromTime = moment(req.body.fromTime).utcOffset("+05:30").subtract(0, "hours").format("HH:mm").toString();
     // .subtract(0.5, "hours");
       
-    const toTime = moment(req.body.fromTime).add(0.5, "hours").format("HH:mm").toString();
+    const toTime = moment(req.body.fromTime).utcOffset("+05:30").add(0.5, "hours").format("HH:mm").toString();
     // .add(0.5, "hours");
     
     // const compareValue = string1.localeCompare(string2)
@@ -213,6 +213,7 @@ const bookingAvailabilityController = async (req, res) => {
     const doctorId = req.body.doctorId;
 
     const doctor = await doctorModel.findOne({_id: doctorId});
+    
     const startTimeOfDoctor = doctor.timings[0];
     const endTimeOfDoctor = doctor.timings[1];
     if(startTimeOfDoctor > fromTime || endTimeOfDoctor <toTime) {
@@ -269,8 +270,8 @@ const bookingAvailabilityController = async (req, res) => {
 const bookAppointmentController = async (req, res) => {
   try {
     const date = req.body.date = moment(req.body.date).format("DD-MM-YYYY");
-    const toTime = req.body.toTime = moment(req.body.fromTime).add(0.5,"hours").format("HH:mm");
-    const fromTime = req.body.fromTime = moment(req.body.fromTime).subtract(0.5,"hours").format("HH:mm");
+    const toTime = req.body.toTime = moment(req.body.fromTime).utcOffset("+05:30").add(0.5,"hours").format("HH:mm");
+    const fromTime = req.body.fromTime = moment(req.body.fromTime).utcOffset("+05:30").subtract(0,"hours").format("HH:mm");
     
     const doctorId = req.body.doctorId;
 
@@ -279,7 +280,7 @@ const bookAppointmentController = async (req, res) => {
     const endTimeOfDoctor = doctorFirst.timings[1];
     if(startTimeOfDoctor > fromTime || endTimeOfDoctor <toTime) {
       return res.status(200).send({
-        message: "Doctor is not Available at that time, please select the time within the availability of doctor",
+        message: "Doctor is not Available at that time, please select another time within the time of availability of doctor",
         success: true,
       });
     }
